@@ -93,7 +93,6 @@ html, body {
 
 .game-area {
   position: relative;
-  overflow: visible;
   width: min(90vw, 90vh);
   height: min(90vw, 90vh);
   max-width: 600px;
@@ -106,8 +105,8 @@ html, body {
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  width: 55%;
-  height: 70%;
+  width: 50%;
+  height: 60%;
   display: flex;
   align-items: center;
   justify-content: center;
