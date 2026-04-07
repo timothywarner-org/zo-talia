@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Ze Awesome Prussia Interactive Game</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+  <!-- START SCREEN -->
+  <section id="start-screen">
+    <h1 class="title">Ze Awesome Prussia<br>Interactive Game</h1>
+    <button id="start-btn" type="button">START</button>
+    <p class="attribution">Created by Catsalot & BDD</p>
+  </section>
+
+  <!-- MAIN SCREEN -->
+  <section id="main-screen" class="hidden">
+    <div class="game-area">
+
+      <!-- Character display -->
+      <div id="character-container">
+        <img id="character-img" src="assets/expressions/default.svg" alt="Prussia">
+        <img id="gilbird" src="assets/gilbird.svg" alt="Gilbird">
+        <div id="expression-label"></div>
+      </div>
+
+      <!-- Interaction buttons arranged around the character -->
+      <button class="action-btn" data-expression="laughing" data-label="Kesesese!" aria-label="Make Prussia laugh" style="--btn-top: 8%; --btn-left: 12%;">
+        <span class="btn-icon">😆</span>
+      </button>
+      <button class="action-btn" data-expression="angry" data-label="Dummkopf!" aria-label="Make Prussia angry" style="--btn-top: 8%; --btn-left: 88%;">
+        <span class="btn-icon">😤</span>
+      </button>
+      <button class="action-btn" data-expression="embarrassed" data-label="W-was?!" aria-label="Embarrass Prussia" style="--btn-top: 55%; --btn-left: 8%;">
+        <span class="btn-icon">😳</span>
+      </button>
+      <button class="action-btn" data-expression="singing" data-label="Mein Gott!" aria-label="Make Prussia sing" style="--btn-top: 55%; --btn-left: 92%;">
+        <span class="btn-icon">🎵</span>
+      </button>
+      <button class="action-btn" data-expression="default" data-label="Awesome!" aria-label="Prussia is awesome" style="--btn-top: 85%; --btn-left: 50%;">
+        <span class="btn-icon">⭐</span>
+      </button>
+    </div>
+  </section>
+
+  <script src="js/app.js"></script>
+</body>
+</html>
