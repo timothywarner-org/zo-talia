@@ -1,0 +1,49 @@
+---
+title: How Ze Awesome Prussia Game Works
+---
+flowchart TB
+    START["🎮 START SCREEN\nClick START to play!\n(this also turns on sound)"]
+    START -->|START| MAIN
+
+    MAIN["🖥️ MAIN SCREEN\nPrussia hangs out with Gilbird\n9 buttons surround him"]
+
+    MAIN --> CLICK["🔘 Click a Button"]
+    MAIN --> HOVER["🖱️ Hover Over Prussia\n(or long-press on iPad)"]
+
+    CLICK --> FACE["1. Face changes\n(loads a new SVG image)"]
+    FACE --> ANIM["2. Animation plays\n(bounce, shake, sway, etc)"]
+    ANIM --> SOUND["3. Sound effect plays\n(mp3 from assets/sounds/)"]
+    SOUND --> LABEL["4. Catchphrase appears\n(Kesesese! Dummkopf! etc)"]
+    LABEL -->|"2.5 sec timer\n(4 sec for sleep/cry)"| MAIN
+
+    HOVER --> SHOCKED["⚡ Prussia is SHOCKED!\nShake animation + ?! label"]
+    SHOCKED -->|"Move mouse away\nor let go"| MAIN
+
+    CLICK ~~~ BTNS
+
+    subgraph BTNS ["The 9 Buttons"]
+        direction LR
+        B1["😆 Laugh\nbounce"]
+        B2["😏 Proud\nsparkle"]
+        B3["😤 Angry\nshake"]
+        B4["🎵 Sing\nsway"]
+        B5["😈 Scheme\npulse"]
+        B6["😴 Sleep\nfloat"]
+        B7["😢 Cry\ntremble"]
+        B8["😳 Embarrass\nshrink"]
+        B9["⭐ Awesome\npop"]
+    end
+
+    subgraph CODE ["The 3 Code Files"]
+        F1["📄 index.html\nScreens + buttons"]
+        F2["🎨 style.css\nColors + animations"]
+        F3["⚡ app.js\nClick handlers + sound"]
+    end
+
+    subgraph CUSTOMART ["🎨 Add Your Own Art"]
+        A1["1. Draw an expression"]
+        A2["2. Save as .svg or .png"]
+        A3["3. Put in assets/expressions/\nwith the same filename"]
+        A4["4. Refresh browser!"]
+        A1 --> A2 --> A3 --> A4
+    end
