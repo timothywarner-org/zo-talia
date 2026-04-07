@@ -111,6 +111,7 @@ html, body {
   align-items: center;
   justify-content: center;
   cursor: pointer;
+  z-index: 1;
 }
 
 #character-img {
@@ -298,6 +299,7 @@ html, body {
   top: var(--btn-top);
   left: var(--btn-left);
   transform: translate(-50%, -50%);
+  z-index: 10;
   width: clamp(48px, 12vmin, 72px);
   height: clamp(48px, 12vmin, 72px);
   border-radius: 50%;
