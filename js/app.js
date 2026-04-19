@@ -33,18 +33,17 @@
 
   var currentSound = null;
 
-  // iOS requires a user gesture before audio can play. Touch each clip once
-  // inside the START click so later plays are allowed without interaction.
+  // iOS requires a user gesture before audio can play. Prime each clip
+  // synchronously inside the START gesture: muted play -> pause. Must stay
+  // sync; async .then() pauses don't count as same-gesture on Safari.
   function unlockAudio() {
     soundNames.forEach(function (name) {
       var s = sounds[name];
-      var playResult = s.play();
-      if (playResult && typeof playResult.then === 'function') {
-        playResult.then(function () {
-          s.pause();
-          s.currentTime = 0;
-        }).catch(function () {});
-      }
+      s.muted = true;
+      try { s.play(); } catch (e) {}
+      s.pause();
+      s.currentTime = 0;
+      s.muted = false;
     });
   }
 
@@ -97,10 +96,20 @@
   });
 
   // --- Wire up every [data-action] trigger (click zones + named buttons) ---
+  // iOS counts audio as user-gesture-initiated only on synchronous handlers.
+  // pointerdown fires earlier in the gesture chain than click and keeps the
+  // audio unlock alive on Safari when the user taps a nested child (icon/text).
   triggers.forEach(function (el) {
-    el.addEventListener('click', function () {
+    var fired = false;
+    function trigger(e) {
+      if (fired) return;
+      fired = true;
+      setTimeout(function () { fired = false; }, 250);
       setAction(el.getAttribute('data-action'));
-    });
+      if (e && e.cancelable) e.preventDefault();
+    }
+    el.addEventListener('pointerdown', trigger);
+    el.addEventListener('click', trigger);
   });
 
 })();
