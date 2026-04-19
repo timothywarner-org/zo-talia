@@ -137,13 +137,8 @@ html, body {
   opacity: 1;
 }
 
-/* DRINKBEER and WRITEDIARY have more empty padding around the character
-   in the source art (character height 472px in a 700px frame vs ~656px for
-   the CLICK clips). Scale up ~1.39x so the character matches on-screen. */
-.character-clip.is-action {
-  transform: scale(1.39);
-  transform-origin: center;
-}
+/* All clips are now pre-cropped to consistent character framing at the
+   source (see recrop.py), so no per-clip CSS scale is needed. */
 
 /* ===== CLICK ZONES (invisible thirds overlaying the character) ===== */
 .click-zone {
@@ -172,22 +167,24 @@ html, body {
 }
 
 /* ===== EXPRESSION LABEL ===== */
+/* Sibling of #character-container inside .game-area flex column, so it
+   gets placed above the character by the parent's natural flex gap
+   instead of overlapping the character's head. Reserves space via
+   min-height so toggling visibility doesn't shift layout. */
 #expression-label {
-  position: absolute;
-  top: 0.5rem;
-  left: 50%;
-  transform: translateX(-50%);
-  font-size: clamp(1rem, 3vmin, 1.4rem);
+  font-size: clamp(1.1rem, 3.2vmin, 1.6rem);
   font-weight: 700;
   color: #ffd600;
   white-space: nowrap;
+  text-align: center;
+  min-height: 1.4em;
+  line-height: 1.4;
   opacity: 0;
   transition: opacity 0.3s ease;
   text-shadow:
     0 0 8px rgba(255, 214, 0, 0.6),
     0 2px 6px rgba(0, 0, 0, 0.8);
   pointer-events: none;
-  z-index: 4;
 }
 
 #expression-label.visible {

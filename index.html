@@ -19,17 +19,19 @@
   <section id="main-screen" class="hidden">
     <div class="game-area">
 
+      <!-- Expression label floats above the character -->
+      <div id="expression-label"></div>
+
       <!-- Character display: all 5 clips stacked, crossfade between them -->
       <div id="character-container">
         <video class="character-clip is-active" data-clip="click-middle" src="assets/clips/clickmiddle.mp4" autoplay loop muted playsinline preload="auto" aria-label="Prussia"></video>
         <video class="character-clip" data-clip="click-left"   src="assets/clips/clickleft.mp4"   loop muted playsinline preload="auto" aria-hidden="true"></video>
         <video class="character-clip" data-clip="click-right"  src="assets/clips/clickright.mp4"  loop muted playsinline preload="auto" aria-hidden="true"></video>
-        <video class="character-clip is-action" data-clip="drink-beer"  src="assets/clips/drinkbeer.mp4"  loop muted playsinline preload="auto" aria-hidden="true"></video>
-        <video class="character-clip is-action" data-clip="write-diary" src="assets/clips/writediary.mp4" loop muted playsinline preload="auto" aria-hidden="true"></video>
+        <video class="character-clip" data-clip="drink-beer"  src="assets/clips/drinkbeer.mp4"  loop muted playsinline preload="auto" aria-hidden="true"></video>
+        <video class="character-clip" data-clip="write-diary" src="assets/clips/writediary.mp4" loop muted playsinline preload="auto" aria-hidden="true"></video>
         <button class="click-zone" data-action="click-left" aria-label="Poke Prussia on the left"></button>
         <button class="click-zone" data-action="click-middle" aria-label="Poke Prussia in the middle"></button>
         <button class="click-zone" data-action="click-right" aria-label="Poke Prussia on the right"></button>
-        <div id="expression-label"></div>
       </div>
 
       <!-- Named action buttons -->
