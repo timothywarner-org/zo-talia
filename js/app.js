@@ -5,23 +5,29 @@
   var startScreen = document.getElementById('start-screen');
   var mainScreen = document.getElementById('main-screen');
   var startBtn = document.getElementById('start-btn');
-  var characterVideo = document.getElementById('character-video');
   var expressionLabel = document.getElementById('expression-label');
   var triggers = document.querySelectorAll('[data-action]');
 
-  // --- Action table: action name -> clip, sound, label ---
+  // Every <video class="character-clip"> keyed by its data-clip action name.
+  // All 5 are preloaded and stacked on top of each other; we crossfade by
+  // toggling .is-active so there's no network/decode flash on button press.
+  var clips = {};
+  document.querySelectorAll('.character-clip').forEach(function (el) {
+    clips[el.getAttribute('data-clip')] = el;
+  });
+
+  // --- Action table: action name -> sound, label ---
   // MP4 instead of GIF because iOS Safari silently freezes animated GIFs
-  // above an undocumented decoder budget (disposal method / memory quirks).
-  // H.264 MP4 has none of those limits.
+  // above an undocumented decoder budget. H.264 MP4 has none of those limits.
   var actions = {
-    'click-left':   { clip: 'assets/clips/clickleft.mp4',   sound: 'angry',       label: 'Hey!' },
-    'click-middle': { clip: 'assets/clips/clickmiddle.mp4', sound: 'embarrassed', label: 'W-was?!' },
-    'click-right':  { clip: 'assets/clips/clickright.mp4',  sound: 'proud',       label: 'Awesome!' },
-    'drink-beer':   { clip: 'assets/clips/drinkbeer.mp4',   sound: 'laughing',    label: 'Prost!' },
-    'write-diary':  { clip: 'assets/clips/writediary.mp4',  sound: 'scheming',    label: 'Dear diary…' }
+    'click-left':   { sound: 'angry',       label: 'Hey!' },
+    'click-middle': { sound: 'embarrassed', label: 'W-was?!' },
+    'click-right':  { sound: 'proud',       label: 'Awesome!' },
+    'drink-beer':   { sound: 'laughing',    label: 'Prost!' },
+    'write-diary':  { sound: 'scheming',    label: 'Dear diary…' }
   };
 
-  var DEFAULT_CLIP = 'assets/clips/clickmiddle.mp4';
+  var DEFAULT_CLIP = 'click-middle';
   var REVERT_MS = 3000;
   var revertTimeout = null;
 
@@ -63,22 +69,30 @@
   }
 
   // --- Action trigger ---
-  function swapClip(src) {
-    // Set src + force reload + start playback from frame 0. On iOS,
-    // .load() then .play() is the only reliable way to restart a <video>.
-    characterVideo.src = src;
-    characterVideo.load();
-    var playResult = characterVideo.play();
-    if (playResult && typeof playResult.catch === 'function') {
-      playResult.catch(function () {});
-    }
+  function showClip(clipName) {
+    var next = clips[clipName];
+    if (!next) return;
+
+    // Rewind + play the clip we're about to show, so repeat taps restart it.
+    try {
+      next.currentTime = 0;
+      var playResult = next.play();
+      if (playResult && typeof playResult.catch === 'function') {
+        playResult.catch(function () {});
+      }
+    } catch (e) {}
+
+    // Crossfade: activate target, deactivate every other clip.
+    Object.keys(clips).forEach(function (name) {
+      clips[name].classList.toggle('is-active', name === clipName);
+    });
   }
 
   function setAction(actionName) {
     var action = actions[actionName];
     if (!action) return;
 
-    swapClip(action.clip);
+    showClip(actionName);
 
     expressionLabel.textContent = action.label;
     expressionLabel.classList.add('visible');
@@ -90,14 +104,20 @@
   }
 
   function resetAction() {
-    swapClip(DEFAULT_CLIP);
+    showClip(DEFAULT_CLIP);
     expressionLabel.classList.remove('visible');
   }
 
-  // Fallback if a clip is missing
-  characterVideo.addEventListener('error', function () {
-    if (characterVideo.src.indexOf(DEFAULT_CLIP) === -1) {
-      swapClip(DEFAULT_CLIP);
+  // Kick off preload on every clip so they're decoded before the first tap.
+  Object.keys(clips).forEach(function (name) {
+    var v = clips[name];
+    // Playing + immediately pausing all non-active clips primes the decoder
+    // without leaving them visibly playing behind the active one.
+    if (name !== DEFAULT_CLIP) {
+      try {
+        v.muted = true;
+        v.play().then(function () { v.pause(); v.currentTime = 0; }).catch(function () {});
+      } catch (e) {}
     }
   });
 

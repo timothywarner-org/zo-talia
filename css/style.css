@@ -88,7 +88,9 @@ html, body {
   align-items: center;
   justify-content: center;
   height: 100%;
-  background: linear-gradient(180deg, #16213e 0%, #1a1a2e 100%);
+  /* Flat color (not gradient) so the flattened-opaque video clips blend
+     invisibly into the page. True transparency isn't possible with H.264. */
+  background: #1a1a2e;
 }
 
 .game-area {
@@ -114,14 +116,33 @@ html, body {
   align-items: center;
   justify-content: center;
   z-index: 1;
+  /* Clip scaled action videos so they don't bleed past the container. */
+  overflow: hidden;
 }
 
-#character-video {
+/* All clips stacked in the same spot; only .is-active is visible */
+.character-clip {
+  position: absolute;
+  inset: 0;
   width: 100%;
   height: 100%;
   object-fit: contain;
   pointer-events: none;
   background: transparent;
+  opacity: 0;
+  transition: opacity 180ms ease;
+}
+
+.character-clip.is-active {
+  opacity: 1;
+}
+
+/* DRINKBEER and WRITEDIARY have more empty padding around the character
+   in the source art (character height 472px in a 700px frame vs ~656px for
+   the CLICK clips). Scale up ~1.39x so the character matches on-screen. */
+.character-clip.is-action {
+  transform: scale(1.39);
+  transform-origin: center;
 }
 
 /* ===== CLICK ZONES (invisible thirds overlaying the character) ===== */
@@ -143,12 +164,11 @@ html, body {
 .click-zone[data-action="click-middle"] { left: 33.3333%; }
 .click-zone[data-action="click-right"]  { left: 66.6666%; }
 
-.click-zone:hover {
-  background: rgba(255, 214, 0, 0.07);
-}
-
-.click-zone:active {
-  background: rgba(255, 214, 0, 0.15);
+/* No hover/active tint — they showed as a visible rectangle over the
+   (opaque) video. Tap feedback is the animation + sound + label. */
+.click-zone:focus-visible {
+  outline: 2px solid rgba(255, 214, 0, 0.6);
+  outline-offset: -4px;
 }
 
 /* ===== EXPRESSION LABEL ===== */
