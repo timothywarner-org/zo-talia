@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Prussia Game</title>
-  <link rel="preload" as="image" href="zoey-art/CLICKMIDDLE.GIF">
+  <link rel="preload" as="video" href="assets/clips/clickmiddle.mp4" type="video/mp4">
   <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
@@ -22,7 +22,7 @@
 
       <!-- Character display with 3 click zones (left / middle / right) -->
       <div id="character-container">
-        <img id="character-img" src="zoey-art/CLICKMIDDLE.GIF" alt="Prussia">
+        <video id="character-video" src="assets/clips/clickmiddle.mp4" autoplay loop muted playsinline preload="auto" aria-label="Prussia"></video>
         <button class="click-zone" data-action="click-left" aria-label="Poke Prussia on the left"></button>
         <button class="click-zone" data-action="click-middle" aria-label="Poke Prussia in the middle"></button>
         <button class="click-zone" data-action="click-right" aria-label="Poke Prussia on the right"></button>

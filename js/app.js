@@ -5,20 +5,23 @@
   var startScreen = document.getElementById('start-screen');
   var mainScreen = document.getElementById('main-screen');
   var startBtn = document.getElementById('start-btn');
-  var characterImg = document.getElementById('character-img');
+  var characterVideo = document.getElementById('character-video');
   var expressionLabel = document.getElementById('expression-label');
   var triggers = document.querySelectorAll('[data-action]');
 
-  // --- Action table: action name -> art, sound, label ---
+  // --- Action table: action name -> clip, sound, label ---
+  // MP4 instead of GIF because iOS Safari silently freezes animated GIFs
+  // above an undocumented decoder budget (disposal method / memory quirks).
+  // H.264 MP4 has none of those limits.
   var actions = {
-    'click-left':   { art: 'zoey-art/CLICKLEFT.GIF',   sound: 'angry',       label: 'Hey!' },
-    'click-middle': { art: 'zoey-art/CLICKMIDDLE.GIF', sound: 'embarrassed', label: 'W-was?!' },
-    'click-right':  { art: 'zoey-art/CLICKRIGHT.GIF',  sound: 'proud',       label: 'Awesome!' },
-    'drink-beer':   { art: 'zoey-art/DRINKBEER.GIF',   sound: 'laughing',    label: 'Prost!' },
-    'write-diary':  { art: 'zoey-art/WRITEDIARY.GIF',  sound: 'scheming',    label: 'Dear diary…' }
+    'click-left':   { clip: 'assets/clips/clickleft.mp4',   sound: 'angry',       label: 'Hey!' },
+    'click-middle': { clip: 'assets/clips/clickmiddle.mp4', sound: 'embarrassed', label: 'W-was?!' },
+    'click-right':  { clip: 'assets/clips/clickright.mp4',  sound: 'proud',       label: 'Awesome!' },
+    'drink-beer':   { clip: 'assets/clips/drinkbeer.mp4',   sound: 'laughing',    label: 'Prost!' },
+    'write-diary':  { clip: 'assets/clips/writediary.mp4',  sound: 'scheming',    label: 'Dear diary…' }
   };
 
-  var DEFAULT_ART = 'zoey-art/CLICKMIDDLE.GIF';
+  var DEFAULT_CLIP = 'assets/clips/clickmiddle.mp4';
   var REVERT_MS = 3000;
   var revertTimeout = null;
 
@@ -60,12 +63,22 @@
   }
 
   // --- Action trigger ---
+  function swapClip(src) {
+    // Set src + force reload + start playback from frame 0. On iOS,
+    // .load() then .play() is the only reliable way to restart a <video>.
+    characterVideo.src = src;
+    characterVideo.load();
+    var playResult = characterVideo.play();
+    if (playResult && typeof playResult.catch === 'function') {
+      playResult.catch(function () {});
+    }
+  }
+
   function setAction(actionName) {
     var action = actions[actionName];
     if (!action) return;
 
-    // Cache-bust the GIF so it replays from frame 0 on repeat clicks.
-    characterImg.src = action.art + '?t=' + Date.now();
+    swapClip(action.clip);
 
     expressionLabel.textContent = action.label;
     expressionLabel.classList.add('visible');
@@ -77,14 +90,14 @@
   }
 
   function resetAction() {
-    characterImg.src = DEFAULT_ART;
+    swapClip(DEFAULT_CLIP);
     expressionLabel.classList.remove('visible');
   }
 
-  // Fallback if an art file is missing
-  characterImg.addEventListener('error', function () {
-    if (characterImg.src.indexOf(DEFAULT_ART) === -1) {
-      characterImg.src = DEFAULT_ART;
+  // Fallback if a clip is missing
+  characterVideo.addEventListener('error', function () {
+    if (characterVideo.src.indexOf(DEFAULT_CLIP) === -1) {
+      swapClip(DEFAULT_CLIP);
     }
   });
 
