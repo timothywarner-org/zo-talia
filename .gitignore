@@ -1,3 +1,6 @@
+# Tim's stuff
+PRD/
+
 # OS files
 .DS_Store
 Thumbs.db
@@ -15,3 +18,4 @@ ehthumbs.db
 
 # Misc
 *.log
+ui.png

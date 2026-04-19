@@ -41,7 +41,7 @@ html, body {
 }
 
 .title {
-  font-size: clamp(1.8rem, 6vmin, 3.5rem);
+  font-size: clamp(2rem, 8vmin, 4.5rem);
   text-align: center;
   font-weight: 900;
   text-transform: uppercase;
@@ -93,6 +93,11 @@ html, body {
 
 .game-area {
   position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: clamp(1.5rem, 4vmin, 3rem);
   width: min(90vw, 90vh);
   height: min(90vw, 90vh);
   max-width: 600px;
@@ -101,16 +106,13 @@ html, body {
 
 /* ===== CHARACTER ===== */
 #character-container {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  width: 50%;
-  height: 60%;
+  position: relative;
+  width: 70%;
+  flex: 1 1 auto;
+  min-height: 0;
   display: flex;
   align-items: center;
   justify-content: center;
-  cursor: pointer;
   z-index: 1;
 }
 
@@ -118,160 +120,34 @@ html, body {
   width: 100%;
   height: 100%;
   object-fit: contain;
-  transition: transform 0.15s ease, filter 0.2s ease;
-  filter: drop-shadow(0 4px 20px rgba(255, 214, 0, 0.2));
+  filter: drop-shadow(0 4px 20px rgba(255, 214, 0, 0.25));
 }
 
-/* === Expression effects === */
-
-/* Bounce: laughing */
-#character-container.fx-bounce #character-img {
-  animation: fx-bounce 0.5s ease 3;
-}
-@keyframes fx-bounce {
-  0%, 100% { transform: translateY(0) rotate(0deg); }
-  30% { transform: translateY(-12px) rotate(2deg); }
-  60% { transform: translateY(-6px) rotate(-1deg); }
-}
-
-/* Shake: angry */
-#character-container.fx-shake #character-img {
-  animation: fx-shake 0.3s ease 4;
-  filter: drop-shadow(0 0 20px rgba(220, 30, 30, 0.6));
-}
-@keyframes fx-shake {
-  0%, 100% { transform: translateX(0); }
-  25% { transform: translateX(-8px) rotate(-3deg); }
-  75% { transform: translateX(8px) rotate(3deg); }
-}
-
-/* Sparkle: proud */
-#character-container.fx-sparkle #character-img {
-  animation: fx-sparkle 0.8s ease;
-  filter: drop-shadow(0 0 25px rgba(255, 214, 0, 0.8));
-}
-@keyframes fx-sparkle {
-  0% { transform: scale(1); filter: brightness(1); }
-  25% { transform: scale(1.06); filter: brightness(1.3); }
-  50% { transform: scale(1.02); filter: brightness(1); }
-  75% { transform: scale(1.08); filter: brightness(1.4); }
-  100% { transform: scale(1); filter: brightness(1); }
-}
-
-/* Sway: singing */
-#character-container.fx-sway #character-img {
-  animation: fx-sway 0.8s ease-in-out 3;
-  filter: drop-shadow(0 0 15px rgba(123, 31, 162, 0.5));
-}
-@keyframes fx-sway {
-  0%, 100% { transform: rotate(0deg); }
-  25% { transform: rotate(5deg) translateX(4px); }
-  75% { transform: rotate(-5deg) translateX(-4px); }
-}
-
-/* Pulse: scheming */
-#character-container.fx-pulse #character-img {
-  animation: fx-pulse 0.6s ease 3;
-  filter: drop-shadow(0 0 20px rgba(123, 31, 162, 0.7));
-}
-@keyframes fx-pulse {
-  0%, 100% { transform: scale(1); }
-  50% { transform: scale(1.06); }
-}
-
-/* Float: sleeping */
-#character-container.fx-float #character-img {
-  animation: fx-float 2s ease-in-out infinite;
-  filter: drop-shadow(0 0 15px rgba(100, 150, 255, 0.4));
-}
-@keyframes fx-float {
-  0%, 100% { transform: translateY(0); }
-  50% { transform: translateY(-8px); }
-}
-
-/* Tremble: crying */
-#character-container.fx-tremble #character-img {
-  animation: fx-tremble 0.15s ease infinite;
-  filter: drop-shadow(0 0 15px rgba(100, 180, 246, 0.5));
-}
-@keyframes fx-tremble {
-  0%, 100% { transform: translateX(0) translateY(0); }
-  25% { transform: translateX(-2px) translateY(1px); }
-  50% { transform: translateX(2px) translateY(-1px); }
-  75% { transform: translateX(-1px) translateY(1px); }
-}
-
-/* Shrink: embarrassed */
-#character-container.fx-shrink #character-img {
-  animation: fx-shrink 0.6s ease forwards;
-  filter: drop-shadow(0 0 15px rgba(255, 100, 100, 0.5));
-}
-@keyframes fx-shrink {
-  0% { transform: scale(1); }
-  40% { transform: scale(0.88) rotate(3deg); }
-  70% { transform: scale(0.9) rotate(-2deg); }
-  100% { transform: scale(0.92); }
-}
-
-/* Pop: default/awesome reset */
-#character-container.fx-pop #character-img {
-  animation: fx-pop 0.5s ease;
-  filter: drop-shadow(0 0 25px rgba(255, 214, 0, 0.7));
-}
-@keyframes fx-pop {
-  0% { transform: scale(0.95); }
-  40% { transform: scale(1.12); }
-  70% { transform: scale(0.98); }
-  100% { transform: scale(1); }
-}
-
-/* Hover / shocked state */
-#character-container.shocked #character-img {
-  animation: fx-shocked 0.4s ease infinite;
-  filter: drop-shadow(0 4px 30px rgba(255, 214, 0, 0.8));
-}
-@keyframes fx-shocked {
-  0%, 100% { transform: translateX(0) scale(1.04); }
-  20% { transform: translateX(-5px) rotate(-2deg) scale(1.04); }
-  40% { transform: translateX(5px) rotate(2deg) scale(1.04); }
-  60% { transform: translateX(-3px) rotate(-1deg) scale(1.04); }
-  80% { transform: translateX(3px) rotate(1deg) scale(1.04); }
-}
-
-/* Gilbird reacts too */
-#character-container.fx-shake ~ #gilbird,
-#character-container.fx-tremble ~ #gilbird {
-  animation: gilbird-panic 0.3s ease infinite;
-}
-@keyframes gilbird-panic {
-  0%, 100% { transform: translateY(0) rotate(0deg); }
-  25% { transform: translateY(-10px) rotate(-15deg); }
-  75% { transform: translateY(-5px) rotate(10deg); }
-}
-
-#character-container.fx-float ~ #gilbird {
-  animation: gilbird-sleep 3s ease-in-out infinite;
-}
-@keyframes gilbird-sleep {
-  0%, 100% { transform: translateY(0) rotate(0deg); }
-  50% { transform: translateY(-4px) rotate(-3deg); }
-}
-
-/* ===== GILBIRD ===== */
-#gilbird {
+/* ===== CLICK ZONES (invisible thirds overlaying the character) ===== */
+.click-zone {
   position: absolute;
-  top: 5%;
-  right: 5%;
-  width: 15%;
-  height: auto;
-  animation: gilbird-bob 2s ease-in-out infinite;
-  filter: drop-shadow(0 2px 4px rgba(0,0,0,0.3));
+  top: 0;
+  height: 100%;
+  width: 33.3334%;
+  background: transparent;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  z-index: 2;
+  transition: background-color 0.15s ease;
+  -webkit-tap-highlight-color: transparent;
 }
 
-@keyframes gilbird-bob {
-  0%, 100% { transform: translateY(0) rotate(0deg); }
-  25% { transform: translateY(-6px) rotate(2deg); }
-  75% { transform: translateY(3px) rotate(-1deg); }
+.click-zone[data-action="click-left"]   { left: 0; }
+.click-zone[data-action="click-middle"] { left: 33.3333%; }
+.click-zone[data-action="click-right"]  { left: 66.6666%; }
+
+.click-zone:hover {
+  background: rgba(255, 214, 0, 0.07);
+}
+
+.click-zone:active {
+  background: rgba(255, 214, 0, 0.15);
 }
 
 /* ===== EXPRESSION LABEL ===== */
@@ -280,53 +156,61 @@ html, body {
   bottom: -2rem;
   left: 50%;
   transform: translateX(-50%);
-  font-size: clamp(0.9rem, 2.5vmin, 1.3rem);
+  font-size: clamp(1rem, 3vmin, 1.4rem);
   font-weight: 700;
   color: #ffd600;
   white-space: nowrap;
   opacity: 0;
   transition: opacity 0.3s ease;
   text-shadow: 0 0 8px rgba(255, 214, 0, 0.5);
+  pointer-events: none;
+  z-index: 4;
 }
 
 #expression-label.visible {
   opacity: 1;
 }
 
-/* ===== ACTION BUTTONS ===== */
-.action-btn {
-  position: absolute;
-  top: var(--btn-top);
-  left: var(--btn-left);
-  transform: translate(-50%, -50%);
-  z-index: 10;
-  width: clamp(48px, 12vmin, 72px);
-  height: clamp(48px, 12vmin, 72px);
-  border-radius: 50%;
-  border: 2px solid rgba(255, 214, 0, 0.4);
-  background: rgba(255, 255, 255, 0.08);
-  backdrop-filter: blur(4px);
-  cursor: pointer;
-  transition: all 0.2s ease;
+/* ===== ACTION BAR (Drink Beer / Write Diary) ===== */
+.action-bar {
   display: flex;
-  align-items: center;
+  gap: clamp(1rem, 3vmin, 2rem);
+  flex-wrap: wrap;
   justify-content: center;
 }
 
-.action-btn:hover,
-.action-btn:active {
+.action-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6em;
+  padding: 0.7em 1.4em;
+  border-radius: 999px;
+  border: 2px solid rgba(255, 214, 0, 0.4);
+  background: rgba(255, 255, 255, 0.08);
+  backdrop-filter: blur(4px);
+  color: #ffd600;
+  font-family: inherit;
+  font-size: clamp(0.95rem, 2.6vmin, 1.2rem);
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.action-btn:hover {
   background: rgba(255, 214, 0, 0.15);
   border-color: #ffd600;
-  transform: translate(-50%, -50%) scale(1.15);
+  transform: scale(1.05);
   box-shadow: 0 0 15px rgba(255, 214, 0, 0.3);
 }
 
 .action-btn:active {
-  transform: translate(-50%, -50%) scale(0.95);
+  transform: scale(0.96);
 }
 
 .btn-icon {
-  font-size: clamp(1.2rem, 4vmin, 2rem);
+  font-size: 1.4em;
   line-height: 1;
 }
 
@@ -334,7 +218,7 @@ html, body {
 @media (max-width: 600px) {
   .game-area {
     width: 95vw;
-    height: 95vw;
+    height: 95vh;
   }
 }
 

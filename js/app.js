@@ -5,46 +5,46 @@
   var startScreen = document.getElementById('start-screen');
   var mainScreen = document.getElementById('main-screen');
   var startBtn = document.getElementById('start-btn');
-  var characterContainer = document.getElementById('character-container');
   var characterImg = document.getElementById('character-img');
   var expressionLabel = document.getElementById('expression-label');
-  var actionButtons = document.querySelectorAll('.action-btn');
+  var triggers = document.querySelectorAll('[data-action]');
 
-  // --- State ---
-  var DEFAULT_EXPRESSION = 'default';
-  var currentExpression = DEFAULT_EXPRESSION;
-  var currentEffect = null;
-  var reactionTimeout = null;
+  // --- Action table: action name -> art, sound, label ---
+  var actions = {
+    'click-left':   { art: 'zoey-art/CLICKLEFT.GIF',   sound: 'angry',       label: 'Hey!' },
+    'click-middle': { art: 'zoey-art/CLICKMIDDLE.GIF', sound: 'embarrassed', label: 'W-was?!' },
+    'click-right':  { art: 'zoey-art/CLICKRIGHT.GIF',  sound: 'proud',       label: 'Awesome!' },
+    'drink-beer':   { art: 'zoey-art/DRINKBEER.GIF',   sound: 'laughing',    label: 'Prost!' },
+    'write-diary':  { art: 'zoey-art/WRITEDIARY.GIF',  sound: 'scheming',    label: 'Dear diary…' }
+  };
 
-  // All possible effect classes
-  var ALL_EFFECTS = [
-    'fx-bounce', 'fx-shake', 'fx-sparkle', 'fx-sway',
-    'fx-pulse', 'fx-float', 'fx-tremble', 'fx-shrink', 'fx-pop'
-  ];
+  var DEFAULT_ART = 'zoey-art/CLICKMIDDLE.GIF';
+  var REVERT_MS = 3000;
+  var revertTimeout = null;
 
   // --- Audio ---
-  // Preload all sound files
   var sounds = {};
-  var soundNames = [
-    'laughing', 'angry', 'embarrassed', 'singing', 'proud',
-    'crying', 'sleeping', 'scheming', 'shocked', 'default'
-  ];
+  var soundNames = ['angry', 'embarrassed', 'proud', 'laughing', 'scheming'];
   soundNames.forEach(function (name) {
     var audio = new Audio('assets/sounds/' + name + '.mp3');
     audio.preload = 'auto';
     sounds[name] = audio;
   });
 
-  // Current playing sound (for stopping on new expression)
   var currentSound = null;
 
+  // iOS requires a user gesture before audio can play. Touch each clip once
+  // inside the START click so later plays are allowed without interaction.
   function unlockAudio() {
-    // Play and immediately pause each sound to unlock iOS audio
     soundNames.forEach(function (name) {
-      sounds[name].play().then(function () {
-        sounds[name].pause();
-        sounds[name].currentTime = 0;
-      }).catch(function () {});
+      var s = sounds[name];
+      var playResult = s.play();
+      if (playResult && typeof playResult.then === 'function') {
+        playResult.then(function () {
+          s.pause();
+          s.currentTime = 0;
+        }).catch(function () {});
+      }
     });
   }
 
@@ -60,51 +60,33 @@
     }
   }
 
-  // --- Effect management ---
-  function clearEffects() {
-    ALL_EFFECTS.forEach(function (cls) {
-      characterContainer.classList.remove(cls);
-    });
-    characterContainer.classList.remove('shocked');
-    currentEffect = null;
+  // --- Action trigger ---
+  function setAction(actionName) {
+    var action = actions[actionName];
+    if (!action) return;
+
+    // Cache-bust the GIF so it replays from frame 0 on repeat clicks.
+    characterImg.src = action.art + '?t=' + Date.now();
+
+    expressionLabel.textContent = action.label;
+    expressionLabel.classList.add('visible');
+
+    playSound(action.sound);
+
+    clearTimeout(revertTimeout);
+    revertTimeout = setTimeout(resetAction, REVERT_MS);
   }
 
-  // --- Expression management ---
-  function setExpression(name, label, effect) {
-    var src = 'assets/expressions/' + name + '.svg';
-    characterImg.src = src;
-    currentExpression = name;
-
-    // Clear all effects and force reflow to restart animation
-    clearEffects();
-    void characterContainer.offsetWidth;
-
-    // Apply the effect animation
-    if (effect) {
-      characterContainer.classList.add('fx-' + effect);
-      currentEffect = effect;
-    }
-
-    // Show label
-    if (label) {
-      expressionLabel.textContent = label;
-      expressionLabel.classList.add('visible');
-    }
-
-    // Play the sound for this expression
-    playSound(name);
-  }
-
-  function resetExpression() {
-    characterImg.src = 'assets/expressions/' + DEFAULT_EXPRESSION + '.svg';
-    currentExpression = DEFAULT_EXPRESSION;
-    clearEffects();
+  function resetAction() {
+    characterImg.src = DEFAULT_ART;
     expressionLabel.classList.remove('visible');
   }
 
-  // Fallback if an expression image is missing
+  // Fallback if an art file is missing
   characterImg.addEventListener('error', function () {
-    characterImg.src = 'assets/expressions/' + DEFAULT_EXPRESSION + '.svg';
+    if (characterImg.src.indexOf(DEFAULT_ART) === -1) {
+      characterImg.src = DEFAULT_ART;
+    }
   });
 
   // --- Start screen ---
@@ -114,69 +96,11 @@
     mainScreen.classList.remove('hidden');
   });
 
-  // --- Button clicks ---
-  actionButtons.forEach(function (btn) {
-    btn.addEventListener('click', function () {
-      var expression = btn.getAttribute('data-expression');
-      var label = btn.getAttribute('data-label');
-      var effect = btn.getAttribute('data-effect');
-
-      clearTimeout(reactionTimeout);
-      setExpression(expression, label, effect);
-
-      // Sleeping and crying linger longer; others reset after 2.5s
-      var duration = (expression === 'sleeping' || expression === 'crying') ? 4000 : 2500;
-      reactionTimeout = setTimeout(resetExpression, duration);
+  // --- Wire up every [data-action] trigger (click zones + named buttons) ---
+  triggers.forEach(function (el) {
+    el.addEventListener('click', function () {
+      setAction(el.getAttribute('data-action'));
     });
   });
-
-  // --- Hover / touch on character (shocked reaction) ---
-  function showShocked() {
-    clearEffects();
-    characterContainer.classList.add('shocked');
-    characterImg.src = 'assets/expressions/shocked.svg';
-    currentExpression = 'shocked';
-    expressionLabel.textContent = '?!';
-    expressionLabel.classList.add('visible');
-    playSound('shocked');
-  }
-
-  // Desktop: pointerenter / pointerleave
-  characterContainer.addEventListener('pointerenter', function (e) {
-    if (e.pointerType === 'mouse' && currentExpression === DEFAULT_EXPRESSION) {
-      clearTimeout(reactionTimeout);
-      showShocked();
-    }
-  });
-
-  characterContainer.addEventListener('pointerleave', function (e) {
-    if (e.pointerType === 'mouse') {
-      if (currentExpression === 'shocked' || currentExpression === DEFAULT_EXPRESSION) {
-        resetExpression();
-      }
-    }
-  });
-
-  // iPad: long-press on character for shocked reaction
-  var longPressTimer = null;
-
-  characterContainer.addEventListener('touchstart', function () {
-    if (currentExpression !== DEFAULT_EXPRESSION) return;
-    longPressTimer = setTimeout(showShocked, 200);
-  }, { passive: true });
-
-  characterContainer.addEventListener('touchend', function () {
-    clearTimeout(longPressTimer);
-    if (currentExpression === 'shocked') {
-      resetExpression();
-    }
-  }, { passive: true });
-
-  characterContainer.addEventListener('touchcancel', function () {
-    clearTimeout(longPressTimer);
-    if (currentExpression === 'shocked') {
-      resetExpression();
-    }
-  }, { passive: true });
 
 })();

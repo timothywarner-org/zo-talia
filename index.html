@@ -3,14 +3,15 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Ze Awesome Prussia Interactive Game</title>
+  <title>Prussia Game</title>
+  <link rel="preload" as="image" href="zoey-art/CLICKMIDDLE.GIF">
   <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
 
   <!-- START SCREEN -->
   <section id="start-screen">
-    <h1 class="title">Ze Awesome Prussia<br>Interactive Game</h1>
+    <h1 class="title">Prussia Game</h1>
     <button id="start-btn" type="button">START</button>
     <p class="attribution">Created by Catsalot & BDD</p>
   </section>
@@ -19,41 +20,26 @@
   <section id="main-screen" class="hidden">
     <div class="game-area">
 
-      <!-- Character display -->
+      <!-- Character display with 3 click zones (left / middle / right) -->
       <div id="character-container">
-        <img id="character-img" src="assets/expressions/default.svg" alt="Prussia">
-        <img id="gilbird" src="assets/gilbird.svg" alt="Gilbird">
+        <img id="character-img" src="zoey-art/CLICKMIDDLE.GIF" alt="Prussia">
+        <button class="click-zone" data-action="click-left" aria-label="Poke Prussia on the left"></button>
+        <button class="click-zone" data-action="click-middle" aria-label="Poke Prussia in the middle"></button>
+        <button class="click-zone" data-action="click-right" aria-label="Poke Prussia on the right"></button>
         <div id="expression-label"></div>
       </div>
 
-      <!-- Interaction buttons arranged in a ring around the character -->
-      <button class="action-btn" data-expression="laughing" data-label="Kesesese!" data-effect="bounce" aria-label="Make Prussia laugh" style="--btn-top: 6%; --btn-left: 30%;">
-        <span class="btn-icon">😆</span>
-      </button>
-      <button class="action-btn" data-expression="proud" data-label="I am awesome!" data-effect="sparkle" aria-label="Make Prussia proud" style="--btn-top: 6%; --btn-left: 70%;">
-        <span class="btn-icon">😏</span>
-      </button>
-      <button class="action-btn" data-expression="angry" data-label="Dummkopf!" data-effect="shake" aria-label="Make Prussia angry" style="--btn-top: 28%; --btn-left: 90%;">
-        <span class="btn-icon">😤</span>
-      </button>
-      <button class="action-btn" data-expression="singing" data-label="Mein Gott!" data-effect="sway" aria-label="Make Prussia sing" style="--btn-top: 55%; --btn-left: 90%;">
-        <span class="btn-icon">🎵</span>
-      </button>
-      <button class="action-btn" data-expression="scheming" data-label="Kesesese~" data-effect="pulse" aria-label="Prussia schemes" style="--btn-top: 78%; --btn-left: 80%;">
-        <span class="btn-icon">😈</span>
-      </button>
-      <button class="action-btn" data-expression="sleeping" data-label="Zzz..." data-effect="float" aria-label="Prussia falls asleep" style="--btn-top: 92%; --btn-left: 50%;">
-        <span class="btn-icon">😴</span>
-      </button>
-      <button class="action-btn" data-expression="crying" data-label="Nein!" data-effect="tremble" aria-label="Make Prussia cry" style="--btn-top: 78%; --btn-left: 20%;">
-        <span class="btn-icon">😢</span>
-      </button>
-      <button class="action-btn" data-expression="embarrassed" data-label="W-was?!" data-effect="shrink" aria-label="Embarrass Prussia" style="--btn-top: 55%; --btn-left: 10%;">
-        <span class="btn-icon">😳</span>
-      </button>
-      <button class="action-btn" data-expression="default" data-label="Awesome!" data-effect="pop" aria-label="Prussia is awesome" style="--btn-top: 28%; --btn-left: 10%;">
-        <span class="btn-icon">⭐</span>
-      </button>
+      <!-- Named action buttons -->
+      <div class="action-bar">
+        <button class="action-btn" data-action="drink-beer" aria-label="Prussia drinks beer">
+          <span class="btn-icon">🍺</span>
+          <span class="btn-text">Drink Beer</span>
+        </button>
+        <button class="action-btn" data-action="write-diary" aria-label="Prussia writes in his diary">
+          <span class="btn-icon">📖</span>
+          <span class="btn-text">Write Diary</span>
+        </button>
+      </div>
     </div>
   </section>
 

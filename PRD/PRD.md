@@ -1,4 +1,4 @@
-# Zo-Talia Interactive App
+# Prussia Game
 
 ## Overview
 
