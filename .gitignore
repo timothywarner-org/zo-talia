@@ -1,21 +1,22 @@
-# Tim's stuff
-PRD/
+# Build pipeline
+node_modules/
+assets-inbox/
 
-# OS files
+# OS
 .DS_Store
 Thumbs.db
 desktop.ini
 ehthumbs.db
 
-# Editor files
+# Editors
 .vscode/
 .idea/
 *.swp
 *.swo
 *~
-*.sublime-project
-*.sublime-workspace
 
-# Misc
+# Logs
 *.log
-ui.png
+
+# Claude Code local overrides
+.claude/settings.local.json

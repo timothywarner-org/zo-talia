@@ -1,0 +1,46 @@
+{
+  "version": 1,
+  "defaultAction": "click-middle",
+  "actions": [
+    {
+      "name": "click-left",
+      "label": "Hey!",
+      "clip": "assets/click-left/clip.mp4",
+      "still": "assets/click-left/still.png",
+      "sound": "assets/click-left/sound.m4a",
+      "durationMs": 458
+    },
+    {
+      "name": "click-middle",
+      "label": "W-was?!",
+      "clip": "assets/click-middle/clip.mp4",
+      "still": "assets/click-middle/still.png",
+      "sound": "assets/click-middle/sound.m4a",
+      "durationMs": 458
+    },
+    {
+      "name": "click-right",
+      "label": "Awesome!",
+      "clip": "assets/click-right/clip.mp4",
+      "still": "assets/click-right/still.png",
+      "sound": "assets/click-right/sound.m4a",
+      "durationMs": 583
+    },
+    {
+      "name": "drink-beer",
+      "label": "Prost!",
+      "clip": "assets/drink-beer/clip.mp4",
+      "still": "assets/drink-beer/still.png",
+      "sound": "assets/drink-beer/sound.m4a",
+      "durationMs": 2042
+    },
+    {
+      "name": "write-diary",
+      "label": "Dear diary…",
+      "clip": "assets/write-diary/clip.mp4",
+      "still": "assets/write-diary/still.png",
+      "sound": "assets/write-diary/sound.m4a",
+      "durationMs": 2042
+    }
+  ]
+}
